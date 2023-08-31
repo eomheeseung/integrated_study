@@ -10,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.get.GetResponse;
 import org.json.simple.JSONObject;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.Map;
@@ -33,10 +30,8 @@ public class ESMainController {
         elasticsearchService.createIndex();
     }
 
-    // TODO
-    //  save를 다르게 해야 함. dto자체를 넣으면 안될거 같음.
     @Tag(name = "Elasticsearch", description = "Elasticsearch CRUD")
-    @Operation(summary = "create document", description = "실제 데이터를 client로부터 받아서 order에 해당하는 document 생성")
+    @Operation(summary = "create order", description = "실제 데이터를 client로부터 받아서 order에 해당하는 document 생성")
     @PostMapping("/es/create/order")
     public String saveOrder(@RequestBody OrderDTO orderDTO) {
         orderDTO.setOrderId(orderId++);
@@ -50,15 +45,31 @@ public class ESMainController {
         }
     }
 
+    /**
+     * TODO
+     *  1. 찾는 order가 없다면??
+     *  2. orderId도 따로 묶어서 보관이 필요할 거 같은데..
+     * @param vo
+     * @return
+     */
     @Tag(name = "Elasticsearch", description = "Elasticsearch CRUD")
     @Operation(summary = "inquiry order", description = "저장된 order들을 조회")
     @PostMapping("es/inquiry/order")
     public JSONObject inquiryDocument(@RequestBody OrderIdVO vo) {
         GetResponse response = elasticsearchService.getDocument(vo.getOrderId());
         Map<String, Object> sourceAsMap = response.getSourceAsMap();
+
         JSONObject jsonObject = new JSONObject(sourceAsMap);
 
         log.info(jsonObject.toJSONString());
         return jsonObject;
+    }
+
+    @Tag(name = "Elasticsearch", description = "Elasticsearch CRUD")
+    @Operation(summary = "delete order", description = "저장된 order을 삭제")
+    @DeleteMapping("es/delete/order")
+    public String deleteDocument(@RequestBody OrderIdVO vo) {
+        elasticsearchService.deleteDocument(vo.getOrderId());
+        return "delete success";
     }
 }

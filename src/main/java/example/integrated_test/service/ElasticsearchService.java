@@ -3,11 +3,13 @@ package example.integrated_test.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import example.integrated_test.customException.CreateDocumentException;
 import example.integrated_test.customException.CreateIndexException;
+import example.integrated_test.customException.DeleteDocumentException;
 import example.integrated_test.customException.InquiryDocumentException;
 import example.integrated_test.dto.OrderDTO;
 import example.integrated_test.util.ConfigUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
@@ -51,7 +53,7 @@ public class ElasticsearchService {
     }
 
     /**
-     * document save
+     * save document
      * @param dto
      */
     public void createDocument(OrderDTO dto) {
@@ -79,6 +81,19 @@ public class ElasticsearchService {
             return client.get(request, RequestOptions.DEFAULT);
         } catch (IOException e) {
             throw new InquiryDocumentException("not found document");
+        }
+    }
+
+    /**
+     * delete document
+     */
+    public void deleteDocument(String findOrderId) {
+        DeleteRequest request = new DeleteRequest(configUtil.indexName, findOrderId);
+        try {
+            client.delete(request, RequestOptions.DEFAULT);
+            log.info("success delete document");
+        } catch (IOException e) {
+            throw new DeleteDocumentException("fail to delete documnet");
         }
     }
 }
