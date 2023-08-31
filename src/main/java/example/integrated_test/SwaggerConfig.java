@@ -17,8 +17,8 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("docker-redis API")
-                .description("docker compose를 사용하여 redis 환경을 만들고 CRUD 조회")
+                .title("docker-compose API")
+                .description("docker-compose를 사용하여 Redis, Elasticsearch,Kibana 환경을 만들고 CRUD")
                 .version("1.0.0");
     }
 }
