@@ -1,0 +1,25 @@
+spring:
+  data:
+    redis:
+      port: 6379
+      lettuce:
+        pool:
+          min-idle: 0
+          max-active: 8
+          max-idle: 8
+      host: localhost
+  elasticsearch:
+    uris: localhost:9200
+
+
+
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: alpha
+  #    나의 swagger controller 프로젝트 경로
+  packages-to-scan: example.integrated_test.controller
