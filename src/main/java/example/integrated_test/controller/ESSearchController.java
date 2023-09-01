@@ -31,6 +31,7 @@ public class ESSearchController {
      *  deserialize 문제
      *  1. redis에 저장 된 캐시의 이름으로 조회를 해봐야 할 듯...
      *  2. ES에서 검색한 데이터들을 redis 자료구조에 맞게 바꿔야 함.
+     *
      * 캐싱을 사용하지 않을 때는 여러번 검색 request를 날려도 오류가 발생하지 않음.
      * 캐싱을 사용할 경우 deserialize ex 발생
      * @param vo
