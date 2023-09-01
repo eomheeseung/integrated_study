@@ -5,7 +5,7 @@ spring:
       lettuce:
         pool:
           min-idle: 0
-          max-active: 8
+          max-active: 20
           max-idle: 8
       host: localhost
   elasticsearch:
