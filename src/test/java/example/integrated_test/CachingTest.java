@@ -1,46 +1,57 @@
 package example.integrated_test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import example.integrated_test.util.ConfigUtil;
 import org.json.JSONObject;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.Map;
+import java.util.Set;
 
 @SpringBootTest
+@SpringJUnitConfig
 public class CachingTest {
+
+    @Autowired
+    private LettuceConnectionFactory lettuceConnectionFactory;
     private final Logger logger = LoggerFactory.getLogger(CachingTest.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
     private RedisTemplate<String, Object> redisTemplate;
 
-    ConfigUtil configUtil = new ConfigUtil();
-
     @BeforeEach
     public void init() {
         redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(new LettuceConnectionFactory("localhost", 6379));
+        redisTemplate.setConnectionFactory(lettuceConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         redisTemplate.afterPropertiesSet();
     }
 
+    @AfterEach
+    public void delete() {
+        Set<String> keys = redisTemplate.keys("*");
+
+        keys.stream().forEach(key -> redisTemplate.delete(key));
+    }
+
     /*
-    TODO
-     ES -> redis 에서 caching 하려고 test
-     일부러 중첩되게 클래스를 만듬.
-     test용 redis가 필요할 것 같음...
+     test class에서
+     @SpringJUnitConfig를 사용하고 config class에 DI
      */
     @Test
-    @DisplayName("redis save")
+    @DisplayName("redis save and inquiry")
     void saveInRedis() {
 
         ZipCode zipCode = new ZipCode();
@@ -60,8 +71,27 @@ public class CachingTest {
             return "ok";
         });
 
-        redisTemplate.opsForHash().put("myCache", "test", jsonObject.toString());
+        ValueOperations<String, Object> operation = redisTemplate.opsForValue();
+        operation.set("test", jsonObject.toString());
+
+
+        // find
+        logger.info(() -> {
+            System.out.println(operation.get("test"));
+            return "ok";
+        });
     }
+
+
+
+
+
+
+
+
+
+
+
 
 
     class TestDTO {

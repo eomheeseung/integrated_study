@@ -10,6 +10,9 @@ spring:
       host: localhost
   elasticsearch:
     uris: localhost:9200
+  cache:
+    redis:
+      time-to-live: 120
 
 
 

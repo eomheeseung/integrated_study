@@ -1,7 +1,7 @@
 package example.integrated_test.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import example.integrated_test.basicSearch.BasicSearch;
+import example.integrated_test.basicSearch.BasicSearchLogic;
 import example.integrated_test.util.ConfigUtil;
 import example.integrated_test.vo.SearchVO;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -27,18 +27,18 @@ public class ElasticsearchSearchService {
 
     private ObjectMapper mapper = new ObjectMapper();
 
-    private final BasicSearch basicSearch;
+    private final BasicSearchLogic basicSearchLogic;
 
     /**
      * basic search engine
      */
     public JSONObject searchNoWildCardMethod(String target, SearchVO vo) throws IOException {
-        JSONObject jsonObject = responseToJson(basicSearch.searchNoWildCard(target, vo));
+        JSONObject jsonObject = responseToJson(basicSearchLogic.searchNoWildCard(target, vo));
         return jsonObject;
     }
 
     public JSONObject searchWildCardMethod(String target, SearchVO vo) throws IOException {
-        JSONObject jsonObject = responseToJson(basicSearch.searchWildCard(target, vo));
+        JSONObject jsonObject = responseToJson(basicSearchLogic.searchWildCard(target, vo));
         return jsonObject;
     }
 
@@ -48,7 +48,12 @@ public class ElasticsearchSearchService {
 
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
-        jsonArray.addAll(Arrays.asList(searchHits));
+
+        for (SearchHit hit : searchHits) {
+            Map<String, Object> sourceMap = hit.getSourceAsMap(); // 검색 결과의 소스 맵을 추출
+            jsonArray.add(sourceMap); // 맵을 JSON 배열에 추가
+        }
+
         jsonObject.put("hits", jsonArray);
         return jsonObject;
     }
