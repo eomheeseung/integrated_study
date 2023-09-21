@@ -18,10 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class RedisMainController {
     private final UserService userService;
 
-    //TODO
-    // 1. ES7 사용해보자.
-    // 2. webflux로 튜닝
-
     /**
      * @param dto
      */

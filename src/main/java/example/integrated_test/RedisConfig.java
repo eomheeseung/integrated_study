@@ -20,6 +20,7 @@ public class RedisConfig {
     /*
    redis 연결을 설정 -> 보통 Lettuce의 성능이 좋아서 lettuce를 사용한다.
    Bean으로 등록하고 설정
+   host와 port를 적어준다.
     */
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {

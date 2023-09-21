@@ -43,13 +43,13 @@ public class BasicSearchLogic {
         searchRequest.source(sourceBuilder);
 
         SearchResponse search = client.search(searchRequest, RequestOptions.DEFAULT);
-//        log.info(search.toString());
         return search;
     }
 
     public SearchResponse searchWildCard(String target, SearchVO vo) throws IOException {
         SearchRequest searchRequest = new SearchRequest(configUtil.indexName);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
                 .must(QueryBuilders.wildcardQuery(target, vo.getKeyword()));
 

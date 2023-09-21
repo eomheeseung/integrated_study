@@ -1,13 +1,10 @@
 package example.integrated_test.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import example.integrated_test.basicSearch.BasicSearchLogic;
-import example.integrated_test.util.ConfigUtil;
 import example.integrated_test.vo.SearchVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.json.simple.JSONArray;
@@ -21,12 +18,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class ElasticsearchSearchService {
-    private final RestHighLevelClient client;
-    private static final String sourceDetail = "{\"index\":{\"number_of_shards\":1,\"number_of_replicas\":0}}";
-    private final ConfigUtil configUtil;
-
-    private ObjectMapper mapper = new ObjectMapper();
-
     private final BasicSearchLogic basicSearchLogic;
 
     /**

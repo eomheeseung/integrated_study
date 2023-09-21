@@ -19,7 +19,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserService {
     private final RedisTemplate<String, Object> redisTemplate;
-
     public void save(UserDTO dto) {
         User user = User.builder()
                 .name(dto.getName()).phoneNumber(dto.getPhoneNumber())

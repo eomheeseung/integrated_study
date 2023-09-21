@@ -24,7 +24,6 @@ public class ESCRUDController {
     private final ElasticsearchCRUDService crudService;
     private long orderId = 1;
 
-
     @Tag(name = "Elasticsearch CRUD", description = "Elasticsearch CRUD")
     @Operation(summary = "ES create index", description = "사용하기 위해서 먼저 index를 생성해야 한다.")
     @GetMapping("/es/create/index")

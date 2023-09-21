@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +20,6 @@ import java.io.IOException;
 @Slf4j
 public class ESSearchController {
     private final ElasticsearchSearchService searchService;
-    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 주소 이름 검색
